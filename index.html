@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kitchen Crat PK | Smart Kitchen • Better Life</title>
+<meta name="description" content="Kitchen Crat PK - premium kitchen products in Pakistan.">
+<link rel="icon" href="assets/logo.svg">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+:root{--green:#06251d;--green2:#0a3429;--gold:#e8b84d;--cream:#f7f6f0;--ink:#14231f;--muted:#68756f;--line:#dfe5e1;--white:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:#fff}
+a{text-decoration:none;color:inherit}.top{background:var(--green);color:#dbe7e2;text-align:center;padding:9px;font-size:12px;letter-spacing:.3px}
+header{position:sticky;top:0;z-index:20;background:rgba(6,37,29,.96);backdrop-filter:blur(14px);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav{max-width:1250px;margin:auto;display:flex;align-items:center;gap:24px;padding:15px 22px}.brand img{width:205px;display:block}
+.search{flex:1;max-width:460px;position:relative}.search input{width:100%;padding:13px 44px 13px 18px;border-radius:30px;border:1px solid #355248;background:#102f27;color:white;outline:none}.search button{position:absolute;right:5px;top:4px;border:0;border-radius:50%;width:36px;height:36px;background:var(--gold);cursor:pointer}
+.navicons{display:flex;gap:16px;font-size:13px;align-items:center}.navicons button{background:none;border:0;color:white;cursor:pointer}.cart-count{background:var(--gold);color:#111;border-radius:20px;padding:2px 6px;font-size:10px}
+.menu{max-width:1250px;margin:auto;padding:0 22px 14px;display:flex;gap:27px;overflow:auto;font-size:13px}.menu a{opacity:.88;white-space:nowrap}.menu a:hover{color:var(--gold)}
+.hero{min-height:570px;background:linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.30)),url("https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1800&q=85") center/cover;display:flex;align-items:center;color:white}
+.hero-inner{max-width:1250px;width:100%;margin:auto;padding:70px 22px}.eyebrow{color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-size:12px}.hero h1{font-size:clamp(42px,6vw,72px);line-height:1.02;margin:14px 0;max-width:720px}.hero h1 span{color:var(--gold)}.hero p{max-width:580px;color:#e2e8e5;line-height:1.7}.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:9px;padding:14px 22px;font-weight:700;cursor:pointer;transition:.25s;font-size:14px;font-family:inherit}.primary{background:var(--gold);color:#142015}.primary:hover{transform:translateY(-3px);box-shadow:0 12px 25px #0005}.outline{background:transparent;color:white;border:1px solid #ffffff55;margin-left:8px}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}.benefits{background:var(--green);color:#fff}.benefit-grid{max-width:1250px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);padding:20px 22px}.benefit{padding:12px 20px;border-right:1px solid #ffffff18}.benefit:last-child{border:0}.benefit b{display:block;font-size:14px}.benefit small{color:#aebdb7}
+.section{max-width:1250px;margin:auto;padding:72px 22px}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:28px;flex-wrap:wrap;gap:14px}.section h2{font-size:34px;margin:0 0 7px}.sub{color:var(--muted);margin:0}.categories{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}.cat{border:1px solid var(--line);padding:28px 10px;text-align:center;border-radius:14px;transition:.25s;background:white;cursor:pointer}.cat:hover{transform:translateY(-6px);box-shadow:0 15px 35px #0b2c2114;border-color:#b9c9c2}.cat .icon{font-size:42px;margin-bottom:12px}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px;align-items:center}.filters select,.filters input[type=number]{padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit}.filters .pricebox{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}.filters .pricebox input{width:80px}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:white;transition:.3s;position:relative}.card:hover{transform:translateY(-7px);box-shadow:0 20px 40px #0b2c2115}.pic{height:235px;background:#f1f3ee;display:flex;align-items:center;justify-content:center;font-size:100px;position:relative;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.badge{position:absolute;left:12px;top:12px;background:#e9f4e6;color:#28742b;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:700}.sale{background:#fff0e6;color:#c65a20}.oos{position:absolute;inset:0;background:#0006;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}.heart{position:absolute;right:12px;top:12px;border:0;background:white;border-radius:50%;width:34px;height:34px;cursor:pointer}.info{padding:17px}.info h3{font-size:16px;margin:0 0 7px}.rating{font-size:12px;color:#a97712}.price{font-size:20px;font-weight:800;margin-top:10px}.old{text-decoration:line-through;color:#9ca6a1;font-size:12px;margin-left:7px;font-weight:400}.add{width:100%;margin-top:13px;background:var(--green);color:#fff;padding:11px;border:0;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit}.add:hover{background:#0b4a3a}.add:disabled{background:#ccc;cursor:not-allowed}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}.empty .big-emoji{font-size:50px;margin-bottom:10px}
+.banner{background:var(--green);color:#fff;border-radius:22px;padding:45px;display:flex;justify-content:space-between;align-items:center;overflow:hidden;flex-wrap:wrap;gap:20px}.banner h2{margin:0;font-size:32px}.banner p{color:#c4d4ce}.about{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.about-img{min-height:350px;border-radius:20px;background:url("https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1000&q=80") center/cover}.ticks{display:grid;gap:13px;margin-top:25px}.ticks div:before{content:"✓";color:var(--gold);font-weight:bold;margin-right:10px}
+footer{background:#041b15;color:#d8e2de;margin-top:70px}.foot{max-width:1250px;margin:auto;padding:55px 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:35px}.foot img{width:210px}.foot p,.foot a{color:#9eb0aa;font-size:13px;line-height:1.8}.foot h4{color:white;margin-top:0}.newsletter{display:flex}.newsletter input{min-width:0;flex:1;padding:11px;border:0;border-radius:7px 0 0 7px}.newsletter button{border:0;background:var(--gold);padding:0 15px;border-radius:0 7px 7px 0;font-weight:700}.copy{border-top:1px solid #ffffff12;padding:18px 22px;text-align:center;color:#82958e;font-size:12px}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}.modal.open{display:flex}.box{background:white;border-radius:18px;max-width:760px;width:100%;max-height:90vh;overflow:auto;padding:25px}.box.wide{max-width:1000px}.close{float:right;border:0;background:#eee;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:16px}
+.detail{display:grid;grid-template-columns:1fr 1fr;gap:25px}.detail .big{background:#f1f3ee;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:130px;min-height:300px;overflow:hidden}.detail .big img{width:100%;height:100%;object-fit:cover}.detail li{margin:10px 0;color:#4c5b55}.stock-ok{color:#28742b;font-weight:700}.stock-out{color:#c0392b;font-weight:700}
+.cart-row{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.cart-row .thumb{width:60px;height:60px;border-radius:8px;background:#f1f3ee;display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden}.cart-row .thumb img{width:100%;height:100%;object-fit:cover}.cart-row .grow{flex:1}.qty{display:flex;align-items:center;gap:8px}.qty button{width:26px;height:26px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer}.remove-link{color:#c0392b;font-size:12px;background:none;border:0;cursor:pointer;padding:0;margin-top:4px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px}.form-grid .full{grid-column:1/-1}
+.admin-shell{display:flex;gap:0;min-height:420px}.admin-tabs{width:170px;flex-shrink:0;border-right:1px solid var(--line);padding-right:14px}.admin-tabs button{display:block;width:100%;text-align:left;padding:10px 12px;border:0;background:none;border-radius:8px;cursor:pointer;font-size:13px;margin-bottom:4px;font-family:inherit}.admin-tabs button.active{background:var(--green);color:#fff}.admin-body{flex:1;padding-left:20px;min-width:0}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px}.stat{border:1px solid var(--line);border-radius:12px;padding:14px}.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.admin table{width:100%;border-collapse:collapse}.admin th,.admin td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px;vertical-align:middle}.admin td.actions{white-space:nowrap}.admin td.actions button{margin-right:6px;font-size:11px;padding:6px 9px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer}.thumb-sm{width:32px;height:32px;border-radius:6px;object-fit:cover;background:#f1f3ee}
+.badge-status{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700}.st-New{background:#e9f0fe;color:#2955b0}.st-Confirmed{background:#eaf6ea;color:#28742b}.st-Processing{background:#fff6e0;color:#a97712}.st-Shipped{background:#f0e9fe;color:#6c2fb0}.st-Delivered{background:#e6f9ef;color:#1a8a4c}.st-Cancelled{background:#fdeaea;color:#c0392b}
+.banner-note{background:#fff6e0;border:1px solid #f0d98a;color:#7a5c00;padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:16px}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--green);color:white;padding:13px 18px;border-radius:10px;opacity:0;transform:translateY(15px);transition:.3s;z-index:100;max-width:320px}.toast.show{opacity:1;transform:none}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid #0002;border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.confirm-actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:900px){.nav{flex-wrap:wrap}.search{order:3;max-width:none;flex-basis:100%}.benefit-grid{grid-template-columns:1fr 1fr}.categories{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(2,1fr)}.foot{grid-template-columns:1fr 1fr}.about{grid-template-columns:1fr}.detail{grid-template-columns:1fr}.admin-shell{flex-direction:column}.admin-tabs{width:100%;display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:10px}.admin-tabs button{white-space:nowrap;margin-right:4px}.admin-body{padding-left:0;padding-top:14px}.form-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.navicons{gap:8px}.brand img{width:165px}.hero{min-height:500px}.hero h1{font-size:42px}.categories{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:1fr}.benefit-grid,.foot{grid-template-columns:1fr}.benefit{border-right:0;border-bottom:1px solid #ffffff18}.banner{padding:28px;display:block}.section{padding:50px 16px}}
+</style>
+</head>
+<body>
+<div class="top">🇵🇰 Free delivery across Pakistan • Cash on Delivery • WhatsApp ordering</div>
+<header>
+<div class="nav">
+<a class="brand" href="#"><img src="assets/logo.svg" alt="Kitchen Crat PK"></a>
+<div class="search"><input id="search" placeholder="Search for products..." oninput="renderProducts()"><button onclick="document.getElementById('search').focus()">⌕</button></div>
+<div class="navicons"><button onclick="openAdmin()">⚙ Admin</button><button onclick="toggleWishlist()">♡ Wishlist</button><button onclick="openCart()">🛒 <span class="cart-count" id="cartCount">0</span></button></div>
+</div>
+<nav class="menu"><a href="#home">Home</a><a href="#products" onclick="clearFilters()">All Products</a><a href="#categories">Categories</a><a href="#products" onclick="filterCat('Kitchen Appliances')">Kitchen Appliances</a><a href="#products" onclick="filterCat('Cookware')">Cookware</a><a href="#products" onclick="filterCat('Storage & Organizers')">Organizers</a><a href="#products" onclick="filterCat('Utensils')">Utensils</a><a href="#contact">Contact</a></nav>
+</header>
+<main>
+<section class="hero" id="home"><div class="hero-inner"><div class="eyebrow">Premium Kitchen Products</div><h1>Upgrade Your Kitchen <span>With Kitchen Crat PK</span></h1><p>High-quality kitchen tools, stylish appliances and smart solutions for a better cooking experience.</p><a class="btn primary" href="#products">Shop Now →</a><a class="btn outline" href="#categories">Explore Categories</a></div></section>
+<section class="benefits"><div class="benefit-grid"><div class="benefit">🚚 <b>Free Delivery</b><small>Across Pakistan</small></div><div class="benefit">🛡️ <b>Secure Payments</b><small>Cash on Delivery</small></div><div class="benefit">↩️ <b>7 Days Return</b><small>Hassle Free</small></div><div class="benefit">✦ <b>Best Quality</b><small>Premium Products</small></div></div></section>
+<section class="section" id="categories"><div class="section-head"><div><h2>Shop by Category</h2><p class="sub">Find your favorite kitchen essentials</p></div></div><div class="categories" id="categoryGrid"></div></section>
+<section class="section" id="products">
+ <div class="section-head"><div><h2>Featured Products</h2><p class="sub" id="productSub">Top picks from our collection</p></div><button class="btn" onclick="clearFilters()">View All →</button></div>
+ <div class="filters">
+  <select id="fCategory" onchange="renderProducts()"><option value="">All Categories</option></select>
+  <select id="fFlag" onchange="renderProducts()"><option value="">Featured / New / Sale</option><option value="featured">Featured</option><option value="new">New</option><option value="sale">Sale</option></select>
+  <select id="fStock" onchange="renderProducts()"><option value="">Availability</option><option value="in">In Stock</option><option value="out">Out of Stock</option></select>
+  <div class="pricebox">Rs <input type="number" id="fMin" placeholder="Min" onchange="renderProducts()"> - <input type="number" id="fMax" placeholder="Max" onchange="renderProducts()"></div>
+  <select id="fSort" onchange="renderProducts()"><option value="">Sort: Popular</option><option value="lowhigh">Price: Low to High</option><option value="highlow">Price: High to Low</option><option value="newest">Newest</option></select>
+ </div>
+ <div id="productGrid"><div class="empty"><span class="spinner"></span> Loading products…</div></div>
+</section>
+<section class="section"><div class="banner"><div><h2>Make Your Kitchen Smarter</h2><p>Premium products, practical design and a better everyday cooking experience.</p></div><a class="btn primary" href="#products">Shop Collection →</a></div></section>
+<section class="section about"><div class="about-img"></div><div><div class="eyebrow">Why Kitchen Crat PK</div><h2>Smart Kitchen. Better Life.</h2><p class="sub">We bring together useful kitchen products that combine function, quality and modern design.</p><div class="ticks"><div>Quality-focused product selection</div><div>Clear prices in Pakistani Rupees</div><div>Easy browsing on mobile and desktop</div><div>Fast, simple shopping experience</div></div></div></section>
+</main>
+<footer id="contact"><div class="foot"><div><img src="assets/logo.svg"><p id="footAbout">Your online shop for premium kitchen products. Made for modern homes in Pakistan.</p><p id="footContact">📍 Lahore, Pakistan<br>📞 +92 300 0000000</p></div><div><h4>Quick Links</h4><p><a href="#home">Home</a><br><a href="#products">All Products</a><br><a href="#categories">Categories</a><br><a href="#contact">About Us</a></p></div><div><h4>Customer Support</h4><p>Track Order<br>Return Policy<br>Shipping Info<br>Privacy Policy<br>Terms & Conditions</p></div><div><h4>Newsletter</h4><p>Get updates on new products and special offers.</p><div class="newsletter"><input placeholder="Your email address"><button onclick="toast('Thanks for subscribing!')">Join</button></div></div></div><div class="copy">© 2026 Kitchen Crat PK. All rights reserved. • Made in Pakistan</div></footer>
+
+<div class="modal" id="modal"><div class="box" id="modalBox"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- Supabase setup ---------- */
+const DEMO_MODE = !SUPABASE_URL || SUPABASE_URL.includes("YOUR-PROJECT-REF");
+const sb = DEMO_MODE ? null : supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const defaultProducts = [{"id":1,"name":"Premium Non-Stick Cookware Set","category":"Cookware","description":"A durable, easy-clean cookware set for everyday cooking.","price":8999,"old_price":12999,"badge":"30% OFF","rating":4.8,"reviews":124,"image":"🍳","images":[],"features":["7-piece set","Non-stick coating","Heat-resistant handles","Suitable for all stovetops","Easy to clean"],"stock":"In Stock","is_new":false,"on_sale":true,"featured":true},
+{"id":2,"name":"Air Fryer 5.5L","category":"Kitchen Appliances","description":"Healthier frying with rapid air circulation and digital controls.","price":15999,"old_price":21999,"badge":"Sale","rating":4.7,"reviews":98,"image":"🍟","images":[],"features":["5.5L capacity","Digital touch panel","Rapid air circulation","Adjustable temperature","Easy-clean basket"],"stock":"In Stock","is_new":false,"on_sale":true,"featured":true},
+{"id":3,"name":"Premium Spice Jar Set","category":"Storage & Organizers","description":"Keep your spices fresh and organized in style.","price":3499,"old_price":4999,"badge":"New","rating":4.6,"reviews":76,"image":"🫙","images":[],"features":["12 glass jars","Airtight lids","Modern rack","Easy labeling","Kitchen-saving design"],"stock":"In Stock","is_new":true,"on_sale":false,"featured":false},
+{"id":4,"name":"2-Tier Dish Drying Rack","category":"Utensils","description":"Rust-resistant, space-saving drying rack for any kitchen.","price":4999,"old_price":7999,"badge":"New","rating":4.5,"reviews":62,"image":"🍽️","images":[],"features":["2-tier storage","Rust-resistant frame","Drain tray","Large capacity","Space-saving"],"stock":"In Stock","is_new":true,"on_sale":false,"featured":false},
+{"id":5,"name":"Bamboo Kitchen Organizer","category":"Storage & Organizers","description":"Natural bamboo organizer with adjustable sections.","price":2899,"old_price":3999,"badge":"","rating":4.6,"reviews":44,"image":"🥢","images":[],"features":["Natural bamboo","Adjustable sections","Smooth finish","Easy to clean","Compact footprint"],"stock":"In Stock","is_new":false,"on_sale":false,"featured":false},
+{"id":6,"name":"Chef Knife 3-Piece Set","category":"Utensils","description":"Professional stainless steel knives with ergonomic handles.","price":3299,"old_price":4499,"badge":"New","rating":4.8,"reviews":51,"image":"🔪","images":[],"features":["3 professional knives","Stainless steel blades","Ergonomic handles","Protective covers","Balanced grip"],"stock":"In Stock","is_new":true,"on_sale":false,"featured":false}];
+
+let products = [];
+let cart = JSON.parse(localStorage.getItem("kcCart") || "[]");
+let wishlist = JSON.parse(localStorage.getItem("kcWishlist") || "[]");
+let adminUser = null;      // Supabase auth user, once logged in
+let orders = [];
+let settings = {store_name:"Kitchen Crat PK", whatsapp_number: WHATSAPP_NUMBER, contact_phone:"+92 300 0000000", contact_email:"", address:"Lahore, Pakistan", delivery_info:"Free delivery across Pakistan"};
+const cats = [["🍳","Cookware"],["🍟","Kitchen Appliances"],["🫙","Storage & Organizers"],["🥄","Utensils"],["🍽️","Tableware"],["🧂","Accessories"]];
+
+function money(n){return "Rs " + Number(n||0).toLocaleString("en-PK")}
+function esc(s){return String(s==null?"":s).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._toastT);window._toastT=setTimeout(()=>t.classList.remove("show"),2600)}
+function closeModal(){document.getElementById("modal").classList.remove("open");document.getElementById("modalBox").classList.remove("wide")}
+function openModal(html,wide){document.getElementById("modalBody").innerHTML=html;document.getElementById("modalBox").classList.toggle("wide",!!wide);document.getElementById("modal").classList.add("open")}
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+function confirmDialog(msg,onYes){openModal(`<h3>Please confirm</h3><p class="sub">${esc(msg)}</p><div class="confirm-actions"><button class="btn primary" id="cfYes">Yes, continue</button><button class="btn outline" style="color:#111;border-color:#ccc" onclick="closeModal()">Cancel</button></div>`);document.getElementById("cfYes").onclick=()=>{closeModal();onYes()}}
+
+/* ---------- Load data ---------- */
+async function loadProducts(){
+ if(DEMO_MODE){
+   products = JSON.parse(localStorage.getItem("kcProductsDemo")||"null") || JSON.parse(JSON.stringify(defaultProducts));
+ } else {
+   const {data,error} = await sb.from("products").select("*").order("id");
+   if(error){ toast("Could not load products from Supabase — check config.js"); products = []; }
+   else { products = data.map(p=>({...p, features: p.features||[], images: p.images||[]})); }
+ }
+ populateCategoryFilter();
+ renderCategories();
+ renderProducts();
+}
+async function loadSettings(){
+ if(DEMO_MODE) return;
+ const {data} = await sb.from("store_settings").select("*").eq("id",1).single();
+ if(data){ settings = data; applySettingsToPage(); }
+}
+function applySettingsToPage(){
+ document.getElementById("footContact").innerHTML = `📍 ${esc(settings.address)}<br>📞 ${esc(settings.contact_phone)}`;
+}
+function saveProductsDemo(){ localStorage.setItem("kcProductsDemo", JSON.stringify(products)); }
+
+/* ---------- Categories / rendering ---------- */
+function renderCategories(){document.getElementById("categoryGrid").innerHTML=cats.map(c=>`<div class="cat" onclick="filterCat('${c[1]}')"><div class="icon">${c[0]}</div><b>${c[1]}</b></div>`).join("")}
+function populateCategoryFilter(){
+ const sel=document.getElementById("fCategory"); const have=new Set(products.map(p=>p.category));
+ sel.innerHTML = `<option value="">All Categories</option>` + [...have].map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+}
+function filterCat(c){document.getElementById("fCategory").value=c;renderProducts();document.getElementById("products").scrollIntoView({behavior:"smooth"})}
+function clearFilters(){document.getElementById("search").value="";document.getElementById("fCategory").value="";document.getElementById("fFlag").value="";document.getElementById("fStock").value="";document.getElementById("fMin").value="";document.getElementById("fMax").value="";document.getElementById("fSort").value="";renderProducts()}
+
+function renderProducts(){
+ const q=(document.getElementById("search").value||"").toLowerCase();
+ const cat=document.getElementById("fCategory").value;
+ const flag=document.getElementById("fFlag").value;
+ const stockF=document.getElementById("fStock").value;
+ const min=parseFloat(document.getElementById("fMin").value)||0;
+ const max=parseFloat(document.getElementById("fMax").value)||Infinity;
+ const sort=document.getElementById("fSort").value;
+ let list=products.filter(p=>{
+   const text=(p.name+" "+p.category+" "+(p.features||[]).join(" ")).toLowerCase();
+   if(q && !text.includes(q)) return false;
+   if(cat && p.category!==cat) return false;
+   if(flag==="featured" && !p.featured) return false;
+   if(flag==="new" && !p.is_new) return false;
+   if(flag==="sale" && !p.on_sale) return false;
+   if(stockF==="in" && p.stock==="Out of Stock") return false;
+   if(stockF==="out" && p.stock!=="Out of Stock") return false;
+   if(p.price<min || p.price>max) return false;
+   return true;
+ });
+ if(sort==="lowhigh") list=list.slice().sort((a,b)=>a.price-b.price);
+ else if(sort==="highlow") list=list.slice().sort((a,b)=>b.price-a.price);
+ else if(sort==="newest") list=list.slice().sort((a,b)=>(b.id)-(a.id));
+ else list=list.slice().sort((a,b)=>(b.reviews||0)-(a.reviews||0));
+
+ const grid=document.getElementById("productGrid");
+ if(!list.length){ grid.innerHTML=`<div class="empty"><div class="big-emoji">🔍</div>No products match your filters.<br><button class="btn outline" style="color:#111;border-color:#ccc;margin-top:10px" onclick="clearFilters()">Clear filters</button></div>`; return; }
+ grid.className="products";
+ grid.innerHTML=list.map(p=>{
+   const img = p.image && p.image.startsWith("http") ? `<img src="${esc(p.image)}" alt="${esc(p.name)}">` : (p.image||"🍽️");
+   const out = p.stock==="Out of Stock";
+   return `<article class="card">
+   <div class="pic">${p.badge?`<span class="badge ${(p.badge||"").toLowerCase().includes("sale")?"sale":""}">${esc(p.badge)}</span>`:""}<button class="heart" onclick="event.stopPropagation();toggleWishlistItem(${p.id})">${wishlist.includes(p.id)?"♥":"♡"}</button>${out?'<div class="oos">Out of Stock</div>':''}${img}</div>
+   <div class="info"><h3>${esc(p.name)}</h3><div class="rating">★ ${p.rating||0} <span style="color:#8c9691">(${p.reviews||0})</span></div><div class="price">${money(p.price)} ${p.old_price?`<span class="old">${money(p.old_price)}</span>`:""}</div>
+   <button class="add" ${out?"disabled":""} onclick="addCart(${p.id})">🛒 Add to Cart</button><button class="add" style="background:#eaf0ed;color:#06251d" onclick="viewProduct(${p.id})">View Features</button></div></article>`;
+ }).join("");
+}
+
+function toggleWishlist(){ if(!wishlist.length){toast("Your wishlist is empty");return;} const items=products.filter(p=>wishlist.includes(p.id)); openModal(`<h2>Your Wishlist</h2>${items.map(p=>`<div class="cart-row"><div class="thumb">${p.image&&p.image.startsWith("http")?`<img src="${esc(p.image)}">`:p.image}</div><div class="grow"><b>${esc(p.name)}</b><br>${money(p.price)}</div><button class="btn primary" onclick="addCart(${p.id});">Add to Cart</button></div>`).join("")||"<p>No items.</p>"}`) }
+function toggleWishlistItem(id){ if(wishlist.includes(id)){wishlist=wishlist.filter(x=>x!==id); toast("Removed from wishlist");} else {wishlist.push(id); toast("Added to wishlist");} localStorage.setItem("kcWishlist",JSON.stringify(wishlist)); renderProducts(); }
+
+/* ---------- Product detail ---------- */
+function viewProduct(id){
+ const p=products.find(x=>x.id===id); if(!p) return;
+ const out = p.stock==="Out of Stock";
+ const img = p.image && p.image.startsWith("http") ? `<img src="${esc(p.image)}">` : (p.image||"🍽️");
+ openModal(`<div class="detail"><div class="big">${img}</div><div><div class="eyebrow">${esc(p.category)}</div><h2>${esc(p.name)}</h2><div class="rating">★ ${p.rating||0} (${p.reviews||0} reviews)</div><h2>${money(p.price)} ${p.old_price?`<del style="font-size:13px;color:#999">${money(p.old_price)}</del>`:""}</h2><p class="sub">${esc(p.description||"")}</p><p>${out?'<span class="stock-out">Out of Stock</span>':'<span class="stock-ok">In Stock</span>'}</p><h4>Key Features</h4><ul>${(p.features||[]).map(x=>`<li>✓ ${esc(x)}</li>`).join("")}</ul><button class="btn primary" ${out?"disabled":""} onclick="addCart(${p.id});closeModal()">Add to Cart</button> <button class="btn outline" style="color:#111;border-color:#ccc" ${out?"disabled":""} onclick="addCart(${p.id});closeModal();openCart()">Buy Now</button></div></div>`,true);
+}
+
+/* ---------- Cart ---------- */
+function saveCart(){ localStorage.setItem("kcCart", JSON.stringify(cart)); document.getElementById("cartCount").textContent = cart.reduce((s,i)=>s+i.qty,0); }
+function addCart(id){ const row=cart.find(i=>i.id===id); if(row) row.qty++; else cart.push({id,qty:1}); saveCart(); toast("Product added to cart"); }
+function changeQty(id,d){ const row=cart.find(i=>i.id===id); if(!row) return; row.qty+=d; if(row.qty<=0) cart=cart.filter(i=>i.id!==id); saveCart(); openCart(); }
+function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); saveCart(); openCart(); toast("Removed from cart"); }
+function cartLines(){ return cart.map(i=>({...i, p: products.find(p=>p.id===i.id)})).filter(i=>i.p); }
+function cartSubtotal(){ return cartLines().reduce((s,i)=>s+i.p.price*i.qty,0); }
+
+function openCart(){
+ const lines=cartLines();
+ if(!lines.length){ openModal(`<h2>Your Cart</h2><div class="empty"><div class="big-emoji">🛒</div>Your cart is empty.<br><button class="btn primary" style="margin-top:12px" onclick="closeModal()">Continue Shopping</button></div>`); return; }
+ const rows=lines.map(i=>`<div class="cart-row"><div class="thumb">${i.p.image&&i.p.image.startsWith("http")?`<img src="${esc(i.p.image)}">`:i.p.image}</div><div class="grow"><b>${esc(i.p.name)}</b><br>${money(i.p.price)}<div class="qty"><button onclick="changeQty(${i.id},-1)">−</button>${i.qty}<button onclick="changeQty(${i.id},1)">+</button></div><button class="remove-link" onclick="removeFromCart(${i.id})">Remove</button></div><div><b>${money(i.p.price*i.qty)}</b></div></div>`).join("");
+ openModal(`<h2>Your Cart (${lines.reduce((s,i)=>s+i.qty,0)} items)</h2>${rows}<div style="text-align:right;margin-top:14px"><h3>Subtotal: ${money(cartSubtotal())}</h3></div><div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn outline" style="color:#111;border-color:#ccc" onclick="closeModal()">Continue Shopping</button><button class="btn primary" onclick="openCheckout()">Proceed to Checkout →</button></div>`,true);
+}
+
+/* ---------- Checkout ---------- */
+function openCheckout(){
+ const lines=cartLines(); if(!lines.length){ toast("Your cart is empty"); return; }
+ const subtotal=cartSubtotal(); const delivery=0; const total=subtotal+delivery;
+ openModal(`<h2>Checkout</h2>
+ <div class="form-grid">
+  <div><label>Full Name *</label><input id="coName"></div>
+  <div><label>Phone Number *</label><input id="coPhone" placeholder="03XXXXXXXXX"></div>
+  <div><label>WhatsApp Number</label><input id="coWhatsapp" placeholder="Same as phone if blank"></div>
+  <div><label>City *</label><input id="coCity"></div>
+  <div class="full"><label>Complete Delivery Address *</label><textarea id="coAddress" rows="2"></textarea></div>
+  <div class="full"><label>Order Notes (optional)</label><textarea id="coNotes" rows="2"></textarea></div>
+ </div>
+ <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
+  <p class="sub">Order Summary</p>
+  ${lines.map(i=>`<p>${esc(i.p.name)} × ${i.qty} — ${money(i.p.price*i.qty)}</p>`).join("")}
+  <p>Subtotal: ${money(subtotal)}</p><p>Delivery: ${money(delivery)}</p><h3>Total: ${money(total)}</h3>
+ </div>
+ <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+  <button class="btn outline" style="color:#111;border-color:#ccc" onclick="openCart()">← Back to Cart</button>
+  <button class="btn primary" id="placeOrderBtn" onclick="placeOrder()">Place Order on WhatsApp →</button>
+ </div>`,true);
+}
+
+async function placeOrder(){
+ const name=document.getElementById("coName").value.trim();
+ const phone=document.getElementById("coPhone").value.trim();
+ const whatsapp=document.getElementById("coWhatsapp").value.trim()||phone;
+ const city=document.getElementById("coCity").value.trim();
+ const address=document.getElementById("coAddress").value.trim();
+ const notes=document.getElementById("coNotes").value.trim();
+ if(!name||!phone||!city||!address){ toast("Please fill all required fields"); return; }
+ const lines=cartLines(); const subtotal=cartSubtotal(); const delivery=0; const total=subtotal+delivery;
+ const btn=document.getElementById("placeOrderBtn"); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Placing order…';
+
+ const orderRow = { customer_name:name, phone, whatsapp, address, city, notes,
+   items: lines.map(i=>({id:i.id,name:i.p.name,price:i.p.price,qty:i.qty})),
+   subtotal, delivery, total, status:"New" };
+
+ if(!DEMO_MODE){
+   const {error} = await sb.from("orders").insert(orderRow);
+   if(error){ toast("Could not save order online, but you can still send it on WhatsApp."); }
+ } else {
+   const demoOrders = JSON.parse(localStorage.getItem("kcOrdersDemo")||"[]");
+   demoOrders.unshift({...orderRow, id:Date.now(), created_at:new Date().toISOString()});
+   localStorage.setItem("kcOrdersDemo", JSON.stringify(demoOrders));
+ }
+
+ let msg = `Kitchen Crat PK - New Order\n\nCustomer Name: ${name}\nPhone: ${phone}\nWhatsApp: ${whatsapp}\nAddress: ${address}\nCity: ${city}\n\nProducts:\n`;
+ lines.forEach(i=>{ msg+=`${i.p.name} x ${i.qty}\n`; });
+ msg += `\nSubtotal: ${money(subtotal)}\nDelivery: ${money(delivery)}\nTotal: ${money(total)}\n\nNotes: ${notes||"-"}`;
+ const waNumber = (settings.whatsapp_number||WHATSAPP_NUMBER||"").replace(/\D/g,"");
+ window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, "_blank");
+
+ cart=[]; saveCart(); closeModal(); toast("Order placed! Complete it on WhatsApp.");
+}
+
+/* ---------- Admin: auth ---------- */
+async function openAdmin(){
+ if(DEMO_MODE){
+   adminUser = adminUser || (sessionStorage.getItem("kcDemoAdmin") ? {email:"demo-admin"} : null);
+ } else if(!adminUser){
+   const {data} = await sb.auth.getSession();
+   if(data.session) adminUser = data.session.user;
+ }
+ if(adminUser){ renderAdminDashboard(); return; }
+ openModal(`<h2>Admin Login</h2>
+ ${DEMO_MODE?`<div class="banner-note">Running in demo mode (Supabase not configured yet). Any password logs you into a local preview — connect Supabase for a real online admin panel. See README.md.</div>
+   <div class="form-grid"><div class="full"><label>Password</label><input type="password" id="loginPass"></div></div>
+   <button class="btn primary" style="margin-top:14px" onclick="demoLogin()">Log In</button>`
+   :`<div class="form-grid"><div class="full"><label>Admin Email</label><input type="email" id="loginEmail" placeholder="${esc(ADMIN_EMAIL_HINT||"")}"></div><div class="full"><label>Password</label><input type="password" id="loginPass"></div></div>
+   <button class="btn primary" style="margin-top:14px" id="loginBtn" onclick="realLogin()">Log In</button>
+   <p class="sub" style="margin-top:10px">First time? Create this admin user in Supabase Dashboard → Authentication, and add their email to the admin_users table (see README.md).</p>`}
+ `);
+}
+function demoLogin(){ sessionStorage.setItem("kcDemoAdmin","1"); adminUser={email:"demo-admin"}; renderAdminDashboard(); }
+async function realLogin(){
+ const email=document.getElementById("loginEmail").value.trim();
+ const pass=document.getElementById("loginPass").value;
+ const btn=document.getElementById("loginBtn"); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Logging in…';
+ const {data,error} = await sb.auth.signInWithPassword({email,password:pass});
+ if(error){ toast("Login failed: "+error.message); btn.disabled=false; btn.textContent="Log In"; return; }
+ adminUser=data.user; renderAdminDashboard();
+}
+async function adminLogout(){
+ if(!DEMO_MODE) await sb.auth.signOut(); else sessionStorage.removeItem("kcDemoAdmin");
+ adminUser=null; closeModal(); toast("Logged out");
+}
+
+/* ---------- Admin: dashboard shell ---------- */
+let adminTab="dashboard";
+function renderAdminDashboard(){
+ adminTab="dashboard";
+ openModal(`<div class="admin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><h2 style="margin:0">Kitchen Crat PK — Admin</h2><button class="btn outline" style="color:#111;border-color:#ccc" onclick="adminLogout()">Log Out</button></div>
+ ${DEMO_MODE?'<div class="banner-note">Demo mode: product/order changes here are saved only in this browser. Connect Supabase (see README.md) so changes appear for every visitor.</div>':''}
+ <div class="admin-shell">
+  <div class="admin-tabs">
+   <button class="active" data-tab="dashboard" onclick="switchAdminTab(this,'dashboard')">📊 Dashboard</button>
+   <button data-tab="products" onclick="switchAdminTab(this,'products')">📦 Products</button>
+   <button data-tab="add" onclick="switchAdminTab(this,'add')">➕ Add Product</button>
+   <button data-tab="orders" onclick="switchAdminTab(this,'orders')">🧾 Orders</button>
+   <button data-tab="categories" onclick="switchAdminTab(this,'categories')">🗂 Categories</button>
+   <button data-tab="settings" onclick="switchAdminTab(this,'settings')">⚙ Settings</button>
+  </div>
+  <div class="admin-body" id="adminBody"></div>
+ </div></div>`,true);
+ loadOrdersForAdmin().then(renderAdminTabBody);
+}
+function switchAdminTab(btn,tab){ adminTab=tab; document.querySelectorAll(".admin-tabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); renderAdminTabBody(); }
+
+async function loadOrdersForAdmin(){
+ if(DEMO_MODE){ orders = JSON.parse(localStorage.getItem("kcOrdersDemo")||"[]"); return; }
+ const {data,error} = await sb.from("orders").select("*").order("created_at",{ascending:false});
+ orders = error ? [] : data;
+}
+
+function renderAdminTabBody(){
+ const body=document.getElementById("adminBody"); if(!body) return;
+ if(adminTab==="dashboard"){
+   const totalRevenue = orders.filter(o=>o.status==="Delivered").reduce((s,o)=>s+Number(o.total),0);
+   body.innerHTML=`<div class="stat-grid">
+    <div class="stat"><b>${products.length}</b><span>Total Products</span></div>
+    <div class="stat"><b>${orders.length}</b><span>Total Orders</span></div>
+    <div class="stat"><b>${orders.filter(o=>o.status==="New").length}</b><span>New Orders</span></div>
+    <div class="stat"><b>${orders.filter(o=>o.status==="Delivered").length}</b><span>Delivered</span></div>
+    <div class="stat"><b>${money(totalRevenue)}</b><span>Revenue (Delivered)</span></div>
+   </div><p class="sub">Use the tabs on the left to manage products, orders, categories and store settings.</p>`;
+ } else if(adminTab==="products"){ renderAdminProducts(body); }
+ else if(adminTab==="add"){ renderAdminAddForm(body); }
+ else if(adminTab==="orders"){ renderAdminOrders(body); }
+ else if(adminTab==="categories"){ renderAdminCategories(body); }
+ else if(adminTab==="settings"){ renderAdminSettings(body); }
+}
+
+/* ---- Products tab ---- */
+function renderAdminProducts(body){
+ body.innerHTML = `<div style="overflow:auto"><table><thead><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Flags</th><th>Actions</th></tr></thead><tbody>${
+  products.map(p=>`<tr>
+   <td>${p.image&&p.image.startsWith("http")?`<img class="thumb-sm" src="${esc(p.image)}">`:(p.image||"")}</td>
+   <td>${esc(p.name)}</td><td>${esc(p.category)}</td><td>${money(p.price)}</td>
+   <td>${esc(p.stock)}</td>
+   <td>${p.featured?"⭐":""}${p.is_new?"🆕":""}${p.on_sale?"🏷":""}</td>
+   <td class="actions"><button onclick="editProductForm(${p.id})">Edit</button><button onclick="viewProduct(${p.id})">Preview</button><button onclick="deleteProductConfirm(${p.id})">Delete</button></td>
+  </tr>`).join("")
+ }</tbody></table></div>${!products.length?'<div class="empty">No products yet. Use "Add Product" to create one.</div>':''}`;
+}
+
+function productForm(p){
+ p = p || {name:"",category:"Cookware",description:"",price:0,old_price:"",discount:"",image:"",images:[],rating:4.5,reviews:0,stock:"In Stock",badge:"",featured:false,is_new:false,on_sale:false,features:[]};
+ return `<div class="form-grid">
+  <div><label>Product Name</label><input id="pf_name" value="${esc(p.name)}"></div>
+  <div><label>Category</label><select id="pf_category">${cats.map(c=>`<option ${p.category===c[1]?"selected":""}>${c[1]}</option>`).join("")}</select></div>
+  <div><label>Price (Rs)</label><input type="number" id="pf_price" value="${p.price}"></div>
+  <div><label>Old / Original Price (Rs)</label><input type="number" id="pf_oldprice" value="${p.old_price||""}"></div>
+  <div><label>Discount label</label><input id="pf_discount" placeholder="e.g. 30% OFF" value="${esc(p.discount||"")}"></div>
+  <div><label>Badge</label><input id="pf_badge" placeholder="e.g. New / Sale / Custom" value="${esc(p.badge||"")}"></div>
+  <div><label>Rating (0-5)</label><input type="number" step="0.1" id="pf_rating" value="${p.rating||4.5}"></div>
+  <div><label>Number of Reviews</label><input type="number" id="pf_reviews" value="${p.reviews||0}"></div>
+  <div><label>Stock Status</label><select id="pf_stock"><option ${p.stock==="In Stock"?"selected":""}>In Stock</option><option ${p.stock==="Out of Stock"?"selected":""}>Out of Stock</option></select></div>
+  <div><label>Main Image</label><input type="file" id="pf_imagefile" accept="image/*"><input type="hidden" id="pf_image" value="${esc(p.image||"")}"><div id="pf_imagepreview">${p.image&&p.image.startsWith("http")?`<img class="thumb-sm" style="width:50px;height:50px;margin-top:6px" src="${esc(p.image)}">`:""}</div></div>
+  <div class="full"><label>Description</label><textarea id="pf_description" rows="2">${esc(p.description||"")}</textarea></div>
+  <div class="full"><label>Key Features (one per line)</label><textarea id="pf_features" rows="3">${esc((p.features||[]).join("\n"))}</textarea></div>
+  <div class="full"><label>Additional Images</label><input type="file" id="pf_extrafiles" accept="image/*" multiple><input type="hidden" id="pf_images" value='${esc(JSON.stringify(p.images||[]))}'><div id="pf_extrapreview">${(p.images||[]).map(u=>`<img class="thumb-sm" style="width:40px;height:40px;margin:4px 4px 0 0" src="${esc(u)}">`).join("")}</div></div>
+  <div><label><input type="checkbox" id="pf_featured" ${p.featured?"checked":""}> Featured</label></div>
+  <div><label><input type="checkbox" id="pf_new" ${p.is_new?"checked":""}> Mark as New</label></div>
+  <div><label><input type="checkbox" id="pf_sale" ${p.on_sale?"checked":""}> Mark as Sale</label></div>
+ </div>`;
+}
+
+function renderAdminAddForm(body){
+ body.innerHTML = `<h3>Add New Product</h3>${productForm(null)}<button class="btn primary" style="margin-top:14px" id="saveNewBtn" onclick="saveNewProduct()">Save Product</button>`;
+ wireImageInputs();
+}
+function editProductForm(id){
+ const p = products.find(x=>x.id===id); if(!p) return;
+ openModal(`<h3>Edit Product</h3>${productForm(p)}<button class="btn primary" style="margin-top:14px" id="saveEditBtn" onclick="saveEditedProduct(${id})">Save Changes</button>`,true);
+ wireImageInputs();
+}
+function wireImageInputs(){
+ const main=document.getElementById("pf_imagefile");
+ if(main) main.onchange = async e=>{ const url=await uploadImage(e.target.files[0]); if(url){ document.getElementById("pf_image").value=url; document.getElementById("pf_imagepreview").innerHTML=`<img class="thumb-sm" style="width:50px;height:50px;margin-top:6px" src="${esc(url)}">`; } };
+ const extra=document.getElementById("pf_extrafiles");
+ if(extra) extra.onchange = async e=>{ const cur=JSON.parse(document.getElementById("pf_images").value||"[]"); for(const f of e.target.files){ const url=await uploadImage(f); if(url) cur.push(url); } document.getElementById("pf_images").value=JSON.stringify(cur); document.getElementById("pf_extrapreview").innerHTML=cur.map(u=>`<img class="thumb-sm" style="width:40px;height:40px;margin:4px 4px 0 0" src="${esc(u)}">`).join(""); };
+}
+async function uploadImage(file){
+ if(!file) return null;
+ if(DEMO_MODE){ toast("Image upload needs Supabase Storage — connect it first (see README.md)"); return null; }
+ const path = `products/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
+ const {error} = await sb.storage.from("product-images").upload(path, file);
+ if(error){ toast("Image upload failed: "+error.message); return null; }
+ const {data} = sb.storage.from("product-images").getPublicUrl(path);
+ return data.publicUrl;
+}
+function readProductForm(){
+ return {
+   name: document.getElementById("pf_name").value.trim(),
+   category: document.getElementById("pf_category").value,
+   price: Number(document.getElementById("pf_price").value)||0,
+   old_price: document.getElementById("pf_oldprice").value ? Number(document.getElementById("pf_oldprice").value) : null,
+   discount: document.getElementById("pf_discount").value.trim(),
+   badge: document.getElementById("pf_badge").value.trim(),
+   rating: Number(document.getElementById("pf_rating").value)||0,
+   reviews: Number(document.getElementById("pf_reviews").value)||0,
+   stock: document.getElementById("pf_stock").value,
+   image: document.getElementById("pf_image").value,
+   images: JSON.parse(document.getElementById("pf_images").value||"[]"),
+   description: document.getElementById("pf_description").value.trim(),
+   features: document.getElementById("pf_features").value.split("\n").map(s=>s.trim()).filter(Boolean),
+   featured: document.getElementById("pf_featured").checked,
+   is_new: document.getElementById("pf_new").checked,
+   on_sale: document.getElementById("pf_sale").checked,
+ };
+}
+async function saveNewProduct(){
+ const vals=readProductForm(); if(!vals.name){ toast("Product name is required"); return; }
+ if(!vals.image) vals.image="🍽️";
+ if(DEMO_MODE){ vals.id=Date.now(); products.push(vals); saveProductsDemo(); }
+ else { const {error} = await sb.from("products").insert(vals); if(error){ toast("Save failed: "+error.message); return; } await loadProducts(); }
+ toast("Product added"); populateCategoryFilter(); renderProducts(); switchAdminTab(document.querySelector('[data-tab="products"]'),"products");
+}
+async function saveEditedProduct(id){
+ const vals=readProductForm(); if(!vals.name){ toast("Product name is required"); return; }
+ if(!vals.image) vals.image="🍽️";
+ if(DEMO_MODE){ const idx=products.findIndex(p=>p.id===id); products[idx]={...products[idx],...vals}; saveProductsDemo(); }
+ else { const {error} = await sb.from("products").update(vals).eq("id",id); if(error){ toast("Save failed: "+error.message); return; } await loadProducts(); }
+ toast("Product updated"); populateCategoryFilter(); renderProducts(); closeModal(); renderAdminDashboard();
+}
+function deleteProductConfirm(id){
+ const p=products.find(x=>x.id===id);
+ confirmDialog(`Delete "${p.name}"? This cannot be undone.`, async ()=>{
+   if(DEMO_MODE){ products=products.filter(x=>x.id!==id); saveProductsDemo(); }
+   else { const {error} = await sb.from("products").delete().eq("id",id); if(error){ toast("Delete failed: "+error.message); renderAdminDashboard(); return; } await loadProducts(); }
+   toast("Product deleted"); renderProducts(); renderAdminDashboard();
+ });
+}
+
+/* ---- Orders tab ---- */
+const statuses=["New","Confirmed","Processing","Shipped","Delivered","Cancelled"];
+function renderAdminOrders(body){
+ if(!orders.length){ body.innerHTML = `<div class="empty">No orders yet.</div>`; return; }
+ body.innerHTML = `<div style="overflow:auto"><table><thead><tr><th>ID</th><th>Customer</th><th>Phone</th><th>City</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody>${
+  orders.map(o=>`<tr><td>#${o.id}</td><td>${esc(o.customer_name)}<br><span class="sub" style="font-size:11px">${(o.items||[]).map(i=>i.name+" x"+i.qty).join(", ")}</span></td><td>${esc(o.phone)}</td><td>${esc(o.city)}</td><td>${money(o.total)}</td><td>${new Date(o.created_at).toLocaleDateString()}</td>
+   <td><select onchange="updateOrderStatus(${o.id},this.value)">${statuses.map(s=>`<option ${o.status===s?"selected":""}>${s}</option>`).join("")}</select> <span class="badge-status st-${o.status}">${o.status}</span></td></tr>`).join("")
+ }</tbody></table></div>`;
+}
+async function updateOrderStatus(id,status){
+ if(DEMO_MODE){ const idx=orders.findIndex(o=>o.id===id); orders[idx].status=status; localStorage.setItem("kcOrdersDemo",JSON.stringify(orders)); }
+ else { const {error} = await sb.from("orders").update({status}).eq("id",id); if(error){ toast("Update failed: "+error.message); return; } }
+ toast("Order status updated"); renderAdminTabBody();
+}
+
+/* ---- Categories tab ---- */
+function renderAdminCategories(body){
+ body.innerHTML = `<p class="sub">Categories shown on the site (edit the list in index.html's <code>cats</code> array to rename or add new ones).</p><ul>${cats.map(c=>`<li>${c[0]} ${c[1]} — ${products.filter(p=>p.category===c[1]).length} products</li>`).join("")}</ul>`;
+}
+
+/* ---- Settings tab ---- */
+function renderAdminSettings(body){
+ body.innerHTML = `<div class="form-grid">
+  <div><label>Store Name</label><input id="st_name" value="${esc(settings.store_name)}"></div>
+  <div><label>WhatsApp Number</label><input id="st_wa" value="${esc(settings.whatsapp_number)}"></div>
+  <div><label>Contact Phone</label><input id="st_phone" value="${esc(settings.contact_phone)}"></div>
+  <div><label>Contact Email</label><input id="st_email" value="${esc(settings.contact_email||"")}"></div>
+  <div class="full"><label>Address</label><input id="st_address" value="${esc(settings.address)}"></div>
+  <div class="full"><label>Delivery Information</label><textarea id="st_delivery" rows="2">${esc(settings.delivery_info||"")}</textarea></div>
+ </div><button class="btn primary" style="margin-top:14px" onclick="saveSettings()">Save Settings</button>${DEMO_MODE?'<p class="sub" style="margin-top:8px">Demo mode: settings changes are not saved. Connect Supabase to persist these.</p>':''}`;
+}
+async function saveSettings(){
+ const vals={ store_name:document.getElementById("st_name").value.trim(), whatsapp_number:document.getElementById("st_wa").value.trim(), contact_phone:document.getElementById("st_phone").value.trim(), contact_email:document.getElementById("st_email").value.trim(), address:document.getElementById("st_address").value.trim(), delivery_info:document.getElementById("st_delivery").value.trim() };
+ if(DEMO_MODE){ toast("Connect Supabase to save settings permanently"); return; }
+ const {error} = await sb.from("store_settings").update(vals).eq("id",1);
+ if(error){ toast("Save failed: "+error.message); return; }
+ settings={...settings,...vals}; applySettingsToPage(); toast("Settings saved");
+}
+
+/* ---------- Init ---------- */
+saveCart();
+loadProducts();
+loadSettings();
+</script>
+</body></html>
