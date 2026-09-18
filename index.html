@@ -95,6 +95,7 @@ const cats = [["🍳","Cookware"],["🍟","Kitchen Appliances"],["🫙","Storage
 
 function money(n){return "Rs " + Number(n||0).toLocaleString("en-PK")}
 function esc(s){return String(s==null?"":s).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+function isImageUrl(s){ return !!s && (s.startsWith("http")||s.startsWith("data:")); }
 function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._toastT);window._toastT=setTimeout(()=>t.classList.remove("show"),2600)}
 function closeModal(){document.getElementById("modal").classList.remove("open");document.getElementById("modalBox").classList.remove("wide")}
 function openModal(html,wide){document.getElementById("modalBody").innerHTML=html;document.getElementById("modalBox").classList.toggle("wide",!!wide);document.getElementById("modal").classList.add("open")}
@@ -162,7 +163,7 @@ function renderProducts(){
  if(!list.length){ grid.innerHTML=`<div class="empty"><div class="big-emoji">🔍</div>No products match your filters.<br><button class="btn outline" style="color:#111;border-color:#ccc;margin-top:10px" onclick="clearFilters()">Clear filters</button></div>`; return; }
  grid.className="products";
  grid.innerHTML=list.map(p=>{
-   const img = p.image && p.image.startsWith("http") ? `<img src="${esc(p.image)}" alt="${esc(p.name)}">` : (p.image||"🍽️");
+   const img = isImageUrl(p.image) ? `<img src="${esc(p.image)}" alt="${esc(p.name)}">` : (p.image||"🍽️");
    const out = p.stock==="Out of Stock";
    return `<article class="card">
    <div class="pic">${p.badge?`<span class="badge ${(p.badge||"").toLowerCase().includes("sale")?"sale":""}">${esc(p.badge)}</span>`:""}<button class="heart" onclick="event.stopPropagation();toggleWishlistItem(${p.id})">${wishlist.includes(p.id)?"♥":"♡"}</button>${out?'<div class="oos">Out of Stock</div>':''}${img}</div>
@@ -171,14 +172,14 @@ function renderProducts(){
  }).join("");
 }
 
-function toggleWishlist(){ if(!wishlist.length){toast("Your wishlist is empty");return;} const items=products.filter(p=>wishlist.includes(p.id)); openModal(`<h2>Your Wishlist</h2>${items.map(p=>`<div class="cart-row"><div class="thumb">${p.image&&p.image.startsWith("http")?`<img src="${esc(p.image)}">`:p.image}</div><div class="grow"><b>${esc(p.name)}</b><br>${money(p.price)}</div><button class="btn primary" onclick="addCart(${p.id});">Add to Cart</button></div>`).join("")||"<p>No items.</p>"}`) }
+function toggleWishlist(){ if(!wishlist.length){toast("Your wishlist is empty");return;} const items=products.filter(p=>wishlist.includes(p.id)); openModal(`<h2>Your Wishlist</h2>${items.map(p=>`<div class="cart-row"><div class="thumb">${isImageUrl(p.image)?`<img src="${esc(p.image)}">`:p.image}</div><div class="grow"><b>${esc(p.name)}</b><br>${money(p.price)}</div><button class="btn primary" onclick="addCart(${p.id});">Add to Cart</button></div>`).join("")||"<p>No items.</p>"}`) }
 function toggleWishlistItem(id){ if(wishlist.includes(id)){wishlist=wishlist.filter(x=>x!==id); toast("Removed from wishlist");} else {wishlist.push(id); toast("Added to wishlist");} localStorage.setItem("kcWishlist",JSON.stringify(wishlist)); renderProducts(); }
 
 /* ---------- Product detail ---------- */
 function viewProduct(id){
  const p=products.find(x=>x.id===id); if(!p) return;
  const out = p.stock==="Out of Stock";
- const img = p.image && p.image.startsWith("http") ? `<img src="${esc(p.image)}">` : (p.image||"🍽️");
+ const img = isImageUrl(p.image) ? `<img src="${esc(p.image)}">` : (p.image||"🍽️");
  openModal(`<div class="detail"><div class="big">${img}</div><div><div class="eyebrow">${esc(p.category)}</div><h2>${esc(p.name)}</h2><div class="rating">★ ${p.rating||0} (${p.reviews||0} reviews)</div><h2>${money(p.price)} ${p.old_price?`<del style="font-size:13px;color:#999">${money(p.old_price)}</del>`:""}</h2><p class="sub">${esc(p.description||"")}</p><p>${out?'<span class="stock-out">Out of Stock</span>':'<span class="stock-ok">In Stock</span>'}</p><h4>Key Features</h4><ul>${(p.features||[]).map(x=>`<li>✓ ${esc(x)}</li>`).join("")}</ul><button class="btn primary" ${out?"disabled":""} onclick="addCart(${p.id});closeModal()">Add to Cart</button> <button class="btn outline" style="color:#111;border-color:#ccc" ${out?"disabled":""} onclick="addCart(${p.id});closeModal();openCart()">Buy Now</button></div></div>`,true);
 }
 
@@ -193,7 +194,7 @@ function cartSubtotal(){ return cartLines().reduce((s,i)=>s+i.p.price*i.qty,0); 
 function openCart(){
  const lines=cartLines();
  if(!lines.length){ openModal(`<h2>Your Cart</h2><div class="empty"><div class="big-emoji">🛒</div>Your cart is empty.<br><button class="btn primary" style="margin-top:12px" onclick="closeModal()">Continue Shopping</button></div>`); return; }
- const rows=lines.map(i=>`<div class="cart-row"><div class="thumb">${i.p.image&&i.p.image.startsWith("http")?`<img src="${esc(i.p.image)}">`:i.p.image}</div><div class="grow"><b>${esc(i.p.name)}</b><br>${money(i.p.price)}<div class="qty"><button onclick="changeQty(${i.id},-1)">−</button>${i.qty}<button onclick="changeQty(${i.id},1)">+</button></div><button class="remove-link" onclick="removeFromCart(${i.id})">Remove</button></div><div><b>${money(i.p.price*i.qty)}</b></div></div>`).join("");
+ const rows=lines.map(i=>`<div class="cart-row"><div class="thumb">${isImageUrl(i.p.image)?`<img src="${esc(i.p.image)}">`:i.p.image}</div><div class="grow"><b>${esc(i.p.name)}</b><br>${money(i.p.price)}<div class="qty"><button onclick="changeQty(${i.id},-1)">−</button>${i.qty}<button onclick="changeQty(${i.id},1)">+</button></div><button class="remove-link" onclick="removeFromCart(${i.id})">Remove</button></div><div><b>${money(i.p.price*i.qty)}</b></div></div>`).join("");
  openModal(`<h2>Your Cart (${lines.reduce((s,i)=>s+i.qty,0)} items)</h2>${rows}<div style="text-align:right;margin-top:14px"><h3>Subtotal: ${money(cartSubtotal())}</h3></div><div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn outline" style="color:#111;border-color:#ccc" onclick="closeModal()">Continue Shopping</button><button class="btn primary" onclick="openCheckout()">Proceed to Checkout →</button></div>`,true);
 }
 
@@ -335,7 +336,7 @@ function renderAdminTabBody(){
 function renderAdminProducts(body){
  body.innerHTML = `<div style="overflow:auto"><table><thead><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Flags</th><th>Actions</th></tr></thead><tbody>${
   products.map(p=>`<tr>
-   <td>${p.image&&p.image.startsWith("http")?`<img class="thumb-sm" src="${esc(p.image)}">`:(p.image||"")}</td>
+   <td>${isImageUrl(p.image)?`<img class="thumb-sm" src="${esc(p.image)}">`:(p.image||"")}</td>
    <td>${esc(p.name)}</td><td>${esc(p.category)}</td><td>${money(p.price)}</td>
    <td>${esc(p.stock)}</td>
    <td>${p.featured?"⭐":""}${p.is_new?"🆕":""}${p.on_sale?"🏷":""}</td>
@@ -356,7 +357,7 @@ function productForm(p){
   <div><label>Rating (0-5)</label><input type="number" step="0.1" id="pf_rating" value="${p.rating||4.5}"></div>
   <div><label>Number of Reviews</label><input type="number" id="pf_reviews" value="${p.reviews||0}"></div>
   <div><label>Stock Status</label><select id="pf_stock"><option ${p.stock==="In Stock"?"selected":""}>In Stock</option><option ${p.stock==="Out of Stock"?"selected":""}>Out of Stock</option></select></div>
-  <div><label>Main Image</label><input type="file" id="pf_imagefile" accept="image/*"><input type="hidden" id="pf_image" value="${esc(p.image||"")}"><div id="pf_imagepreview">${p.image&&p.image.startsWith("http")?`<img class="thumb-sm" style="width:50px;height:50px;margin-top:6px" src="${esc(p.image)}">`:""}</div></div>
+  <div><label>Main Image</label><input type="file" id="pf_imagefile" accept="image/*"><input type="hidden" id="pf_image" value="${esc(p.image||"")}"><div id="pf_imagepreview">${isImageUrl(p.image)?`<img class="thumb-sm" style="width:50px;height:50px;margin-top:6px" src="${esc(p.image)}">`:""}</div></div>
   <div class="full"><label>Description</label><textarea id="pf_description" rows="2">${esc(p.description||"")}</textarea></div>
   <div class="full"><label>Key Features (one per line)</label><textarea id="pf_features" rows="3">${esc((p.features||[]).join("\n"))}</textarea></div>
   <div class="full"><label>Additional Images</label><input type="file" id="pf_extrafiles" accept="image/*" multiple><input type="hidden" id="pf_images" value='${esc(JSON.stringify(p.images||[]))}'><div id="pf_extrapreview">${(p.images||[]).map(u=>`<img class="thumb-sm" style="width:40px;height:40px;margin:4px 4px 0 0" src="${esc(u)}">`).join("")}</div></div>
@@ -383,7 +384,16 @@ function wireImageInputs(){
 }
 async function uploadImage(file){
  if(!file) return null;
- if(DEMO_MODE){ toast("Image upload needs Supabase Storage — connect it first (see README.md)"); return null; }
+ if(DEMO_MODE){
+   if(file.size > 1024*1024){ toast("Demo mode: please use an image under 1MB"); return null; }
+   toast("Demo mode: image saved locally in this browser only (connect Supabase to make it permanent/online)");
+   return await new Promise((resolve,reject)=>{
+     const reader = new FileReader();
+     reader.onload = () => resolve(reader.result);
+     reader.onerror = () => { toast("Could not read image file"); reject(null); };
+     reader.readAsDataURL(file);
+   }).catch(()=>null);
+ }
  const path = `products/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
  const {error} = await sb.storage.from("product-images").upload(path, file);
  if(error){ toast("Image upload failed: "+error.message); return null; }
